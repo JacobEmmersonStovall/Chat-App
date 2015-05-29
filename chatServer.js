@@ -3,8 +3,10 @@ var app = express();
 var http = require('http');
 http.Server(app);
 
+app.use(express.static(__dirname + '/assets'));
+
 app.get('/',function(req,res){
-  res.send('<h1>Hello World</h1>');
+  res.sendFile(__dirname + '/index.html');
 });
 
 var server = app.listen(3000, function(){

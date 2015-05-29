@@ -1,0 +1,46 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
+}
+
+body{
+  font-size: 13px;
+  font-family: Helvetica, sans-serif;
+}
+
+form{
+  background-color: #b53c18;
+  padding: 3px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+#im{
+  border: 0;
+  padding: 10px;
+  width: 85%;
+  margin-right: 1%;
+}
+
+#send{
+  width: 10%;
+  background-color: #F08161;
+  border: none;
+  padding: 10px;
+}
+
+#messages{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#messages li{
+  padding: 5px 10px;
+}
+
+#messages li:nth-child(odd){
+  background-color: #F0AE61;
+}

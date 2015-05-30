@@ -10,5 +10,20 @@
       <input id="im" autocomplete="off" />
       <button id="send">Send!</button>
     </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+    $(document).ready(function(){
+      var socket = io();
+      $('form').submit(function(){
+        socket.emit('chat message', $('#im').val());
+        $('#im').val('');
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append('<li>'+msg+'</li>');
+      });
+    });
+    </script>
   </body>
 </html>

@@ -13,6 +13,7 @@ app.get('/',function(req,res){
 });
 
 io.on('connection', function (socket) {
+        console.log('User Connected.');
         socket.on('chat message', function (msg) {
           if(msg === '!helloBot'){
             io.to(socket.id).emit('chat message', msg);

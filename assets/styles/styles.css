@@ -43,5 +43,5 @@ form{
 }
 
 #messages li:nth-child(odd){
-  background-color: #F0AE61;
+  background-color: #DDD;
 }

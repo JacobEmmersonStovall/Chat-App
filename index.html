@@ -14,14 +14,21 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
     $(document).ready(function(){
+      var name = prompt("What is your usernname?", "");
       var socket = io();
+      socket.emit('username', name);
       $('form').submit(function(){
         socket.emit('chat message', $('#im').val());
         $('#im').val('');
         return false;
       });
+      socket.on('newName', function(){
+        name = prompt("Someone else is using that name. Choose a different one.", "");
+        socket.emit('username', name);
+      });
       socket.on('chat message', function(msg){
         $('#messages').append('<li>'+msg+'</li>');
+        document.body.scrollTop = $('#messages').outerHeight(false) - $(window).height();
       });
     });
     </script>

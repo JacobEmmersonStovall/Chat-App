@@ -17,6 +17,12 @@ app.get('/',function(req,res){
 
 var chatBot = function(socket,msg){
   switch(msg){
+    case "!help":
+      var helpMessage = "<ul><li>Commands:</li>"+
+                        "<li>!numUsers - Get the number of users in room</li>"+
+                        "<li>!users - Get all of the usernames currently in room</li>"+
+                        "<li>!helloBot - Say hello to Chat Bot</li></ul>";
+      return helpMessage;
     case "!helloBot":
       return "Chat Bot: Hello "+socket.username;
     case "!numUsers":
@@ -55,7 +61,8 @@ io.on('connection', function (socket) {
         var chatBotHello = "Chat Bot: <em>Hello User, I'm Chat Bot. In" +
          " addition to chatting with friends, you can talk to me and I'll give"+
          " you different types of info. (Don't worry, if you type the command"+
-         " write, no one will see us talking.) To see all my commands, just type !helloBot";
+         " write, no one will see us talking.) To see all my commands, just type !help."+
+         " Also, if the chat is empty, my apologies XD.</em>";
         io.to(socket.id).emit('chat message', chatBotHello);
         socket.on('username', function(name){
           var found = usernames.indexOf(name) > -1;
@@ -65,6 +72,8 @@ io.on('connection', function (socket) {
           else{
             socket.username = name;
             usernames.push(name);
+            io.emit('chat message', "<i>"+name+" has entered the chat. There are"+
+                    " currently "+userCount+" user(s) in the room.</i>");
           }
         });
         socket.on('chat message', function (msg) {
@@ -83,5 +92,5 @@ io.on('connection', function (socket) {
 });
 
 server.listen(3000, function(){
-  console.log("Listening on localhost:3000");
+  console.log("stovechat.me is live dawg");
 });

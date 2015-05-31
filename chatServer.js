@@ -18,11 +18,10 @@ app.get('/',function(req,res){
 var chatBot = function(socket,msg){
   switch(msg){
     case "!help":
-      var helpMessage = "<ul><li>Commands:</li>"+
-                        "<li>!numUsers - Get the number of users in room</li>"+
-                        "<li>!users - Get all of the usernames currently in room</li>"+
-                        "<li>!helloBot - Say hello to Chat Bot</li></ul>";
-      return helpMessage;
+      io.to(socket.id).emit('alert', "Commands:");
+      io.to(socket.id).emit('alert', "!numUsers - Get the number of users in room");
+      io.to(socket.id).emit('alert', "!users - Get all of the usernames currently in room");
+      return "!helloBot - Say hello to Chat Bot";
     case "!helloBot":
       return "Chat Bot: Hello "+socket.username;
     case "!numUsers":
@@ -58,28 +57,36 @@ var outputMessage = function(usr,msg){
 io.on('connection', function (socket) {
         console.log('User Connected.');
         userCount = userCount + 1;
-        var chatBotHello = "Chat Bot: <em>Hello User, I'm Chat Bot. In" +
+        var chatBotHello = "Chat Bot: Hello User, I'm Chat Bot. In" +
          " addition to chatting with friends, you can talk to me and I'll give"+
          " you different types of info. (Don't worry, if you type the command"+
          " write, no one will see us talking.) To see all my commands, just type !help."+
-         " Also, if the chat is empty, my apologies XD.</em>";
-        io.to(socket.id).emit('chat message', chatBotHello);
+         " Also, if the chat is empty, my apologies XD.";
+        io.to(socket.id).emit('alert', chatBotHello);
         socket.on('username', function(name){
-          var found = usernames.indexOf(name) > -1;
-          if(found){
-            io.to(socket.id).emit('newName');
+          if(name.trim() == ""){
+            socket.username = "User #"+userCount;
+            usernames.push(socket.username);
+            io.emit('alert', socket.username+" has entered the chat. There are"+
+                    " currently "+userCount+" user(s) in the room.");
           }
           else{
-            socket.username = name;
-            usernames.push(name);
-            io.emit('chat message', "<i>"+name+" has entered the chat. There are"+
-                    " currently "+userCount+" user(s) in the room.</i>");
+            var found = usernames.indexOf(name) > -1;
+            if(found){
+              io.to(socket.id).emit('newName');
+            }
+            else{
+              socket.username = name;
+              usernames.push(name);
+              io.emit('alert', name+" has entered the chat. There are"+
+                      " currently "+userCount+" user(s) in the room.");
+            }
           }
         });
         socket.on('chat message', function (msg) {
           if(msg.charAt(0) == '!'){
             io.to(socket.id).emit('chat message', outputMessage(socket.username,msg));
-            io.to(socket.id).emit('chat message', chatBot(socket,msg));
+            io.to(socket.id).emit('alert', chatBot(socket,msg));
           }
           else{
             io.emit('chat message', outputMessage(socket.username,msg));

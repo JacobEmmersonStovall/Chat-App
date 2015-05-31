@@ -27,7 +27,13 @@
         socket.emit('username', name);
       });
       socket.on('chat message', function(msg){
-        $('#messages').append('<li>'+msg+'</li>');
+        var text = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        $('#messages').append('<li>'+text+'</li>');
+        document.body.scrollTop = $('#messages').outerHeight(false) - $(window).height();
+      });
+      socket.on('alert', function(msg){
+        var text = msg.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        $('#messages').append('<li><em>'+text+'</em></li>');
         document.body.scrollTop = $('#messages').outerHeight(false) - $(window).height();
       });
     });

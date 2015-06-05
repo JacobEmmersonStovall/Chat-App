@@ -89,7 +89,9 @@ io.on('connection', function (socket) {
             io.to(socket.id).emit('alert', chatBot(socket,msg));
           }
           else{
-            io.emit('chat message', outputMessage(socket.username,msg));
+            if(msg.trim() != ""){
+              io.emit('chat message', outputMessage(socket.username,msg));
+            }
           }
         });
         socket.on('disconnect', function(){
